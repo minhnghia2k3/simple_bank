@@ -1,0 +1,16 @@
+version: "2"
+sql:
+    - name: "db"
+      engine: "postgresql"
+      queries: "./db/query/"
+      schema: "./db/migration/"
+      gen:
+          go:
+              package: "db"
+              out: "./db/sqlc"
+#              sql_package: "pgx/v5"
+              emit_json_tags: true
+              emit_prepared_queries: false # performance
+              emit_interface: false # mock test
+              # false -> singularize the table name - Accounts -> account
+              emit_exact_table_names: false
