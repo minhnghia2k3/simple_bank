@@ -7,11 +7,13 @@ createdb:
 dropdb:
 	docker exec -it postgres_db dropdb simple_bank
 
+VERSION ?=
 migrateup:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up $(VERSION)
 
+VERSION ?=
 migratedown:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down $(VERSION)
 
 sqlc:
 	sqlc generate

@@ -59,15 +59,16 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 	return tx.Commit()
 }
 
-// TransferTx take context, and params.
-// It will handle transaction callback function then returns TransferTxResult struct and error.
+// TransferTx transaction take context, and params.
+// It will create a transfer
+// Create a subtract entry
+// Create a add entry
+// And addMoney to `FROM` and `TO` account.
 func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
-		txName := ctx.Value(txKey)
-		fmt.Println(txName, "create transfer")
 		// Create a new transfer
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			ToAccountID:   arg.ToAccountID,
@@ -79,7 +80,6 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		}
 
 		// Create subtract entry
-		fmt.Println(txName, "create entry 1")
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.FromAccountID,
 			Amount:    -arg.Amount,
@@ -89,7 +89,6 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 		}
 
 		// Create add entry
-		fmt.Println(txName, "create entry 2")
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.ToAccountID,
 			Amount:    arg.Amount,
