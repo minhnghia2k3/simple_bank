@@ -14,3 +14,5 @@ sql:
               emit_interface: false # mock test
               # false -> singularize the table name - Accounts -> account
               emit_exact_table_names: false
+              # true -> make list response [] instead nil
+              emit_empty_slices: true
